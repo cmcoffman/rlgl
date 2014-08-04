@@ -150,7 +150,7 @@ cshl2.gfp=merge(cshl2.gfp, rand.2, by=c("Well.Number"))
 cshl3.gfp=merge(cshl3.gfp, rand.3, by=c("Well.Number"))
 cshl4.gfp=merge(cshl4.gfp, rand.4, by=c("Well.Number"))
 
-#plot(cshl1.gfp$values, cshl1.gfp$green.intensity)
+plot(cshl1.gfp$green.intensity, cshl1.gfp$values)
 
 #merge blanks with metadata
 blank.600=merge(blank.600, metadata.blank )
@@ -209,3 +209,4 @@ cshl.all$OD.600=cshl.all$Abs.600-media.blank
 #flu blank subtraction
 cshl.all$GFP=cshl.all$GFP.flu-(JT2.blank-media.blank)*(cshl.all$OD.600/JT2.blank)
 
+cshl.all=merge(cshl.all, subset(metadata, select=c("coordinate", "row", "column")))
