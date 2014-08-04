@@ -7,3 +7,9 @@
 # R data files from past sessions
 .Rdata
 .Rproj.user
+
+#OS files
+~*
+
+#temporary files I make
+temp.*

@@ -99,6 +99,7 @@ random1=read.csv("randomizationMatrix (1).csv")
 random2=read.csv("randomizationMatrix (2).csv")
 random3=read.csv("randomizationMatrix (3).csv")
 random4=read.csv("randomizationMatrix (4).csv")
+metadata.blank=read.csv("blank_metadata.csv")
 
 #merge data and metadata----
 
@@ -149,30 +150,62 @@ cshl2.gfp=merge(cshl2.gfp, rand.2, by=c("Well.Number"))
 cshl3.gfp=merge(cshl3.gfp, rand.3, by=c("Well.Number"))
 cshl4.gfp=merge(cshl4.gfp, rand.4, by=c("Well.Number"))
 
-plot(cshl1.gfp$values, cshl1.gfp$green.intensity)
+#plot(cshl1.gfp$values, cshl1.gfp$green.intensity)
 
-#get intensities
-well.index=subset(metadata, select=c(Well.Number, green.intensity))
-well.index=data.frame(Randomized.Index=well.index$Well.Number, Green.Intensity=well.index$green.intensity)
+#merge blanks with metadata
+blank.600=merge(blank.600, metadata.blank )
+blank.gfp=merge(blank.gfp, metadata.blank)
 
-#merge with intensitieis
-cshl1.abs.600=merge(cshl1.abs.600, well.index, by=c("Randomized.Index"))
-cshl2.abs.600=merge(cshl2.abs.600, well.index, by=c("Randomized.Index"))
-cshl3.abs.600=merge(cshl3.abs.600, well.index, by=c("Randomized.Index"))
-cshl4.abs.600=merge(cshl4.abs.600, well.index, by=c("Randomized.Index"))
+#merge plates together----
+cshl1.gfp$Plate=1
+cshl2.gfp$Plate=2
+cshl3.gfp$Plate=3
+cshl4.gfp$Plate=4
 
-cshl1.gfp=merge(cshl1.gfp, well.index, by=c("Randomized.Index"))
-cshl2.gfp=merge(cshl2.gfp, well.index, by=c("Randomized.Index"))
-cshl3.gfp=merge(cshl3.gfp, well.index, by=c("Randomized.Index"))
-cshl4.gfp=merge(cshl4.gfp, well.index, by=c("Randomized.Index"))
+cshl1.abs.600$Plate=1
+cshl2.abs.600$Plate=2
+cshl3.abs.600$Plate=3
+cshl4.abs.600$Plate=4
 
+cshl1=data.frame(coordinate=cshl1.abs.600$coordinate,
+                Abs.600=cshl1.abs.600$values,
+                GFP.flu=cshl1.gfp$values,
+                green.intensity=cshl1.gfp$green.intensity,
+                plate=1)
 
+cshl2=data.frame(coordinate=cshl2.abs.600$coordinate,
+                 Abs.600=cshl2.abs.600$values,
+                 GFP.flu=cshl2.gfp$values,
+                 green.intensity=cshl2.gfp$green.intensity,
+                 plate=2)
 
+cshl3=data.frame(coordinate=cshl3.abs.600$coordinate,
+                 Abs.600=cshl3.abs.600$values,
+                 GFP.flu=cshl3.gfp$values,
+                 green.intensity=cshl3.gfp$green.intensity,
+                 plate=3)
 
-phen.plate1.meta=merge(phen.plate1, subset(metadata, plate==1, select = c(Well, good.sample)), by=c("Well"))
+cshl4=data.frame(coordinate=cshl4.abs.600$coordinate,
+                 Abs.600=cshl4.abs.600$values,
+                 GFP.flu=cshl4.gfp$values,
+                 green.intensity=cshl4.gfp$green.intensity,
+                 plate=4)
 
+cshl.all=rbind(cshl1, cshl2, cshl3, cshl4)
 
 rm(values)
 rm(coord.list)
 rm(letters)
 rm(numbers)
+
+#blank subtraction----
+blank.600.avg=tapply(blank.600$values, blank.600$contents, mean )
+media.blank=blank.600.avg[6]
+JT2.blank=blank.600.avg[2]
+
+#absorbance blank subtraction
+cshl.all$OD.600=cshl.all$Abs.600-media.blank
+
+#flu blank subtraction
+cshl.all$GFP=cshl.all$GFP.flu-(JT2.blank-media.blank)*(cshl.all$OD.600/JT2.blank)
+
