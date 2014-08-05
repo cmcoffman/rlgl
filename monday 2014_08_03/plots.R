@@ -49,7 +49,7 @@ ggsave("repeat-sunday-OD-row.png")
 sunday.repeat.plot.GFP.column <- ggplot(repeat.sunday, aes(factor(column), GFP)) +
   geom_boxplot() +
   facet_grid(.~plate) +
-  ggtitle(label="GFP vs Intensity by column ") +
+  ggtitle(label="GFP vs Intensity by column ") 
   #xlab("Column") +
   #ylab("GFP")
   sunday.repeat.plot.GFP.column
