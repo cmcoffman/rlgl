@@ -80,9 +80,34 @@ cshl.plot.GFP=cshl.plot.GFP +
   geom_point() +
   #scale_x_discrete(limits=c("mock","MeJA")) +
   facet_grid(.~green.intensity) +
-  ggtitle(label="GFP vs Intensity ") +
+  ggtitle(label="GFP vs Time by Intensity") +
   xlab("Time") +
   ylab("GFP") +
   geom_smooth(method = "loess")
 cshl.plot.GFP
-ggsave("repeat-sunday-GFP.png")
+ggsave("step-up-GFP.png")
+
+cshl.plot.GFP <- ggplot(step.up, aes(time, OD))
+cshl.plot.GFP=cshl.plot.GFP +
+  geom_point() +
+  #scale_x_discrete(limits=c("mock","MeJA")) +
+  facet_grid(.~green.intensity) +
+  ggtitle(label="OD vs Time by Intensity") +
+  xlab("Time") +
+  ylab("GFP") +
+  geom_smooth(method = "loess")
+cshl.plot.GFP
+ggsave("step-up-OD.png")
+
+#step-off-plots----
+cshl.plot.GFP <- ggplot(step.down, aes(time, GFP))
+cshl.plot.GFP=cshl.plot.GFP +
+  geom_point() +
+  #scale_x_discrete(limits=c("mock","MeJA")) +
+  facet_grid(.~green.intensity) +
+  ggtitle(label="GFP vs Time by Intensity - step off") +
+  xlab("Time") +
+  ylab("GFP") +
+  geom_smooth(method = "loess")
+cshl.plot.GFP
+ggsave("step-off-GFP.png")
