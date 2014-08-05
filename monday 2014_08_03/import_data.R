@@ -77,3 +77,8 @@ cshl.all$GFP=cshl.all$GFP.flu-(JT2.blank-media.blank)*(cshl.all$OD.600/JT2.blank
 step.up=subset(cshl.all, cshl.all$plate==1 | cshl.all$plate==3)
 repeat.sunday=subset(cshl.all, cshl.all$plate==2)
 step.down=subset(cshl.all, cshl.all$plate==4)
+
+#output data as csvs----
+write.csv(repeat.sunday, file="repeat-sunday.csv")
+write.csv(step.up, file="step-up.csv")
+write.csv(step.down, file="step-down.csv")
