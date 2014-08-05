@@ -1,0 +1,8 @@
+JT2.blank=.131
+media.blank=.0482
+
+#absorbance blank subtraction
+cshl.all$OD.600=cshl.all$Abs.600-media.blank
+
+#flu blank subtraction
+cshl.all$GFP=cshl.all$GFP.flu-(JT2.blank-media.blank)*(cshl.all$OD.600/JT2.blank)
